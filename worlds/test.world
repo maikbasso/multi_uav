@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="test">
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+<!--    <include>
+      <uri>model://house43</uri>
+      <name>house</name>
+      <pose>0 0 1.5 0 0 0</pose>
+    </include>-->
+  </world>
+</sdf>

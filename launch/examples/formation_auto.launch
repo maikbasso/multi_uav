@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="multi_uav" name="formation_auto_node" type="formation_auto_node" output="screen"/>
+
+</launch>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="multi_uav" name="offboard_global_control_node" type="offboard_global_control_node" output="screen"/>
+
+</launch>
