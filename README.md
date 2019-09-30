@@ -61,6 +61,7 @@ $ roslaunch multi_uav multi_uav.launch
 ```
 
 Optional parameters:
+
     - worldName: the name of the world in worlds folder;
     - modelType: xacro or sdf;
     - vehicle: iris or solo (only if using sdf model type);
