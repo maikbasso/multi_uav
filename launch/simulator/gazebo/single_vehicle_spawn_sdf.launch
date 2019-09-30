@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- vehcile model and config -->
+    <arg name="ID" default="0"/>
+    <arg name="vehicle" default="iris"/>
+
+    <!-- vehicle pose -->
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="0"/>
+
+    <!-- PX4 configs -->
+    <env name="PX4_SIM_MODEL" value="$(arg vehicle)" />
+    <env name="PX4_ESTIMATOR" value="ekf2" />
+    <arg name="interactive" default="true"/>
+    
+    <!-- PX4 SITL -->
+    <arg unless="$(arg interactive)" name="px4_command_arg1" value=""/>
+    <arg     if="$(arg interactive)" name="px4_command_arg1" value="-d"/>
+    <node name="sitl_$(arg ID)" pkg="px4" type="px4" output="screen" args="$(find px4)/ROMFS/px4fmu_common -s etc/init.d-posix/rcS -i $(arg ID) $(arg px4_command_arg1)">
+    </node>
+
+    <!-- spawn vehicle -->
+    <node name="uav$(arg ID)_spawn" output="screen" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(find multi_uav)/models/$(arg vehicle)/$(arg vehicle)/$(arg vehicle)_$(arg ID).sdf -model uav$(arg ID) -package_to_model -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg R) -P $(arg P) -Y $(arg Y)"/>
+
+    <!--
+        rosrun tf static_transform_publisher 0 0 0 0 0 0 base_link /uav0/camera_link 50
+        solve error to view camera im rviz
+    <node pkg="tf" type="static_transform_publisher" name="uav_$(arg ID)_camera_tf" args="0 0 0 0 0 0 base_link uav$(arg ID)/camera_link 50" />
+    -->
+    <node name ="link1_broadcaster" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 local_origin_ned fcu 10" />
+
+</launch>

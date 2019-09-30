@@ -60,6 +60,17 @@ $ source src/multi_uav/scripts/init/pc/init_ws.sh
 $ roslaunch multi_uav multi_uav.launch
 ```
 
+Optional parameters:
+    - worldName: the name of the world in worlds folder;
+    - modelType: xacro or sdf;
+    - vehicle: iris or solo (only if using sdf model type);
+    - numberUAVs: the number of drones (0 to N drones). N increases until your PC supports;
+
+Example:
+```sh
+$ roslaunch multi_uav multi_uav.launch vehicle:=solo modelType:=sdf numberUAVs:=5 worldName:=empty
+```
+
 ## Node examples
 With the simulation running, run in a new terminal:
 ```sh
