@@ -113,7 +113,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  LIBRARIES gazebo_plugins
+#  LIBRARIES gazebo_plugins
   CATKIN_DEPENDS message_runtime
 #  CATKIN_DEPENDS geometry_msgs mavros mavros_msgs roscpp rospy std_msgs
 #  DEPENDS system_lib
