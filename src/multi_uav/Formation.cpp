@@ -40,6 +40,26 @@ Formation::~Formation()
 
 }
 
+void Formation::setMoveOffset(double offset){
+  this->MOVEJM = offset;
+}
+
+void Formation::setRotateOffset(double offset){
+  this->ROTATEJM = offset;
+}
+
+void Formation::setDistanceOffset(double offset){
+  this->DISTANCEJM = offset;
+}
+
+void Formation::setApertureOffset(double offset){
+  this->APERTUREJM = offset;
+}
+
+void Formation::setUpDownOffset(double offset){
+  this->UPDOWNJM = offset;
+}
+
 std::vector<multi_uav::Drone*> Formation::getDrones()
 {
   return this->drones;

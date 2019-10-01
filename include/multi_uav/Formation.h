@@ -17,13 +17,6 @@
 #define OFFSETORIGIN 1.0
 #define TAKEOFFHEIGHT 2.0
 
-//  Joystick Mode offset comands
-#define MOVEJM 1
-#define ROTATEJM 15
-#define DISTANCEJM 1
-#define APERTUREJM 10
-#define UPDOWNJM 1
-
 namespace multi_uav{
 
 
@@ -55,6 +48,12 @@ class Formation{
   std::vector<multi_uav::Drone*> drones;
   std::vector<position> posDrones;
 
+  //  Joystick Mode offset comands
+  double MOVEJM = 1;
+  double ROTATEJM = 15;
+  double DISTANCEJM = 1;
+  double APERTUREJM = 10;
+  double UPDOWNJM = 1;
 
   int getch();
   void printCoordinates();  
@@ -85,6 +84,12 @@ class Formation{
   void joystickMode();
   void droneLocalControl(int droneNumber );
 
+  //change the offset values
+  void setMoveOffset(double offset);
+  void setRotateOffset(double offset);
+  void setDistanceOffset(double offset);
+  void setApertureOffset(double offset);
+  void setUpDownOffset(double offset);
 
   ////////////////////////////////////  Auto Functions  ////////////////////////////////////
   void moveAuto                 (double distance, int command);

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="multi_uav" name="joystick_node" type="joystick_node" output="screen"/>
+
+</launch>
