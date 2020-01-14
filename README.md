@@ -113,3 +113,21 @@ Run on terminal:
 ```sh
 $ sh ~/drone_simulator_ws/src/multi_uav/scripts/solve_ssl_error_ubuntu_18_04.sh
 ```
+
+### Compiling on Raspberry Pi 3 B+ with Ubuntu 16.04
+Firstly, you need to increase the virtual memory:
+```sh
+$ sudo fallocate -l 1G /swapfile
+$ sudo chmod 600 /swapfile
+$ sudo mkswap /swapfile
+$ sudo swapon /swapfile
+```
+Now, install the additional ros packages:
+```sh
+$ sudo apt install ros-kinetic-gazebo-*
+```
+Then, compile the project:
+```sh
+$ cd catkin_ws
+$ catkin_make
+```
