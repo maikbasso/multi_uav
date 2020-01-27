@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="droneId" default="0"/>
+  <!-- Port and baudrate of the connetion with Pixhawk -->
+  <!--<arg name="fcu_url" default="/dev/serial0:921600" />-->
+  <arg name="fcu_url" default="/dev/serial0:57600" />
+
+  <group ns="$(eval 'uav' + str(arg('droneId')))">
+    <!-- MAVROS -->
+    <include file="$(find mavros)/launch/px4.launch">
+      <arg name="fcu_url" value="$(arg fcu_url)"/>
+      <arg name="gcs_url" value=""/>
+      <arg name="tgt_system" value="$(eval 1 + arg('droneId'))"/>
+      <arg name="tgt_component" value="1"/>
+    </include>
+  </group>
+
+</launch>
