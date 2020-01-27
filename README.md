@@ -32,6 +32,9 @@ Run on terminal:
 ```sh
 $ sudo apt install ros-kinetic-mavlink*
 $ sudo apt install ros-kinetic-mavros*
+$ wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
+$ sudo chmod +x install_geographiclib_datasets.sh
+$ sudo ./install_geographiclib_datasets.sh
 ```
 
 ### Create a ROS Workspace
