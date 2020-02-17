@@ -703,7 +703,7 @@ void Drone::forceModeOffboard(){
 
   this->print("force set mode offboard enabled");
 
-  while (!modeWasSet) {
+  while (!modeWasSet && ros::ok()) {
 
     //send a few setpoints before starting OFFBOARD mode
     this->print("send a few setpoints before starting");
