@@ -32,7 +32,7 @@ git clone https://github.com/maikbasso/Firmware.git px4
 cd px4
 
 # make px4 firmware
-git submodule update --init --recursive --progress
+git submodule update --init --recursive
 DONT_RUN=1 make px4_sitl_default gazebo
 
 # return to ros workspace
