@@ -50,7 +50,7 @@ Run on terminal:
 ```sh
 $ cd ~/drone_simulator_ws/src
 $ git clone https://github.com/maikbasso/multi_uav.git
-$ sudo sh ~/drone_simulator_ws/src/multi_uav/scripts/install/pc/install.sh
+$ sh ~/drone_simulator_ws/src/multi_uav/scripts/install/pc/install.sh
 $ catkin_make
 ```
 In the installation, the script can request your Linux user password.
