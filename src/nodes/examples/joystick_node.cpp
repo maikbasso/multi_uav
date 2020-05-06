@@ -11,17 +11,6 @@
 #include <string.h>
 #include <multi_uav/utils/Math.h>
 
-multi_uav::Formation *formation;
-
-void rosLoop(){
-  ros::Rate rate(50.0);
-  while(ros::ok()){
-    ros::spinOnce();
-    rate.sleep();
-  }
-  formation->~Formation();
-}
-
 int main(int argc, char **argv) {
   // init os
   ros::init(argc, argv, "joystick_node");
@@ -30,28 +19,36 @@ int main(int argc, char **argv) {
 
   std::vector<multi_uav::Drone*> drones;
 
-  int droneNumber;
+  //read drone number
+  if(nh.hasParam("/joystick_node/droneId")){
+      int droneNumber;
+      nh.getParam("/joystick_node/droneId", droneNumber);
 
-  std::cout << "Type a valid UAV id: ";
-  std::cin >> droneNumber;
+      multi_uav::Drone *drone = new multi_uav::Drone(nh, droneNumber, true);
+      drones.push_back(drone);
 
-  multi_uav::Drone *drone = new multi_uav::Drone(nh, droneNumber, false);
-  drones.push_back(drone);
+      multi_uav::Formation *formation = new multi_uav::Formation(drones);
 
-  formation = new multi_uav::Formation(drones);
+      //set new offsets
+      formation->setMoveOffset(0.1); //10 cm
+      formation->setUpDownOffset(0.1); //10 cm
+      formation->setRotateOffset(1.0); // 1 degree
 
-  //set new offsets
-  formation->setMoveOffset(0.1); //10 cm
-  formation->setUpDownOffset(0.1); //10 cm
-  formation->setRotateOffset(1.0); // 1 degree
+      std::thread *joystickModeThread = new std::thread(&multi_uav::Formation::joystickMode, formation);
+      std::thread *droneThread = new std::thread(&multi_uav::Formation::droneLocalControl, formation, droneNumber);
 
-  std::thread *rosLoopThread = new std::thread(rosLoop);  
-  std::thread *joystickModeThread = new std::thread(&multi_uav::Formation::joystickMode, formation);
-  std::thread *droneThread = new std::thread(&multi_uav::Formation::droneLocalControl, formation, droneNumber);
+      ros::Rate rate(20.0);
 
-  rosLoopThread->join();  
-  joystickModeThread->join();
-  droneThread->join();
+      while(ros::ok()){
+        ros::spinOnce();
+        rate.sleep();
+      }
+
+      formation->~Formation();
+  }
+  else{
+      std::cout << "droneId parameter not specified." << std::endl;
+  }
 
   return 0;
 }

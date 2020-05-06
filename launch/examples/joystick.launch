@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <launch>
 
-    <node pkg="multi_uav" name="joystick_node" type="joystick_node" output="screen"/>
+    <arg name="droneId" default="0"/>
+
+    <node pkg="multi_uav" name="joystick_node" type="joystick_node" output="screen">
+        <param name="droneId" value="$(arg droneId)" />
+    </node>
 
 </launch>
