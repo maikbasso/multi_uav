@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="droneId" default="0"/>
+
+    <node pkg="multi_uav" name="osd_viewer_node" type="osd_viewer_node" output="screen">
+        <param name="droneId" value="$(arg droneId)" />
+    </node>
+
+</launch>

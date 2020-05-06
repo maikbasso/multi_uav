@@ -171,6 +171,7 @@ add_executable(offboard_global_control_node src/nodes/examples/offboard_global_c
 add_executable(formation_joystick_node src/nodes/examples/formation_joystick_node.cpp)
 add_executable(formation_auto_node src/nodes/examples/formation_auto_node.cpp)
 add_executable(joystick_node src/nodes/examples/joystick_node.cpp)
+add_executable(osd_viewer_node src/nodes/examples/osd_viewer_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -194,6 +195,7 @@ target_link_libraries(formation_joystick_node ${PROJECT_NAME} ${catkin_LIBRARIES
 target_link_libraries(formation_auto_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(GimbalSmall2dPlugin ${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 target_link_libraries(joystick_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(osd_viewer_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##
