@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
       int droneNumber;
       nh.getParam("/joystick_node/droneId", droneNumber);
 
-      multi_uav::Drone *drone = new multi_uav::Drone(nh, droneNumber, true);
+      multi_uav::Drone *drone = new multi_uav::Drone(nh, droneNumber, false);
       drones.push_back(drone);
 
       multi_uav::Formation *formation = new multi_uav::Formation(drones);
