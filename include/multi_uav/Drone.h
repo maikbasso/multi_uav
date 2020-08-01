@@ -21,7 +21,7 @@
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
-#include <mavros_msgs/GlobalPositionTarget.h>
+#include <geographic_msgs/GeoPoseStamped.h> //to fix ~setpoint_position/global https://github.com/mavlink/mavros/issues/1411
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/BatteryState.h>

@@ -380,7 +380,7 @@ void Drone::initRosPublishers(){
   this->publisherSetPositionLocal = this->nodeHandle.advertise<geometry_msgs::PoseStamped>(this->formatTopicName("/mavros/setpoint_position/local"), 100);
 
   // set position global publisher
-  this->publisherSetPositionGlobal = this->nodeHandle.advertise<mavros_msgs::GlobalPositionTarget>(this->formatTopicName("/mavros/setpoint_position/global"), 100);
+  this->publisherSetPositionGlobal = this->nodeHandle.advertise<geographic_msgs::GeoPoseStamped>(this->formatTopicName("/mavros/setpoint_position/global"), 100);
 }
 
 //void Drone::gimbalOrientationPublisher(){
@@ -582,11 +582,15 @@ bool Drone::setModeOffboard(){
   }
   else{
 
-    mavros_msgs::GlobalPositionTarget globalTargetMsg;
-    globalTargetMsg.latitude = this->parameters.position.global.latitude;
-    globalTargetMsg.longitude = this->parameters.position.global.longitude;
-    globalTargetMsg.altitude = this->parameters.position.global.altitude; // in meters, AMSL or above terrain
-    //globalTargetMsg.yaw = this->parameters.orientation.global.yaw; // in degrees
+    geographic_msgs::GeoPoseStamped globalTargetMsg;
+    globalTargetMsg.pose.position.latitude = this->parameters.position.global.latitude;
+    globalTargetMsg.pose.position.longitude = this->parameters.position.global.longitude;
+    globalTargetMsg.pose.position.altitude = this->parameters.position.global.altitude; // in meters, AMSL or above terrain
+    tf::Quaternion q = tf::createQuaternionFromYaw(multi_uav::utils::Math::degreesToRadians(this->parameters.orientation.global.yaw));
+    globalTargetMsg.pose.orientation.x = q.getX();
+    globalTargetMsg.pose.orientation.y = q.getY();
+    globalTargetMsg.pose.orientation.z = q.getZ();
+    globalTargetMsg.pose.orientation.w = q.getW();
 
     //the setpoint publishing rate MUST be faster than 2Hz
     ros::Rate rate(50.0);
@@ -631,11 +635,16 @@ void Drone::forceModeOffboard(){
     }
     else{
 
-      mavros_msgs::GlobalPositionTarget globalTargetMsg;
-      globalTargetMsg.latitude = this->parameters.position.global.latitude;
-      globalTargetMsg.longitude = this->parameters.position.global.longitude;
-      globalTargetMsg.altitude = this->parameters.position.global.altitude; // in meters, AMSL or above terrain
-      //globalTargetMsg.yaw = this->parameters.orientation.global.yaw; // in degrees
+      geographic_msgs::GeoPoseStamped globalTargetMsg;
+      globalTargetMsg.pose.position.latitude = this->parameters.position.global.latitude;
+      globalTargetMsg.pose.position.longitude = this->parameters.position.global.longitude;
+      globalTargetMsg.pose.position.altitude = this->parameters.position.global.altitude; // in meters, AMSL or above terrain
+      tf::Quaternion q = tf::createQuaternionFromYaw(multi_uav::utils::Math::degreesToRadians(this->parameters.orientation.global.yaw));
+      globalTargetMsg.pose.orientation.x = q.getX();
+      globalTargetMsg.pose.orientation.y = q.getY();
+      globalTargetMsg.pose.orientation.z = q.getZ();
+      globalTargetMsg.pose.orientation.w = q.getW();
+
 
       //the setpoint publishing rate MUST be faster than 2Hz
       ros::Rate rate(50.0);
@@ -791,17 +800,21 @@ bool Drone::goToGlobalPosition(double latitude, double longitude, double altitud
   double angleOffset = 5.0;
 
   //create a mavros commnad
-  // http://docs.ros.org/api/mavros_msgs/html/msg/GlobalPositionTarget.html
-  mavros_msgs::GlobalPositionTarget msg;
-  msg.latitude = latitude;
-  msg.longitude = longitude;
-  msg.altitude = altitude; // in meters, AMSL or above terrain
+  // http://docs.ros.org/jade/api/geographic_msgs/html/msg/GeoPoseStamped.html
+  geographic_msgs::GeoPoseStamped msg;
+  msg.pose.position.latitude = latitude;
+  msg.pose.position.longitude = longitude;
+  msg.pose.position.altitude = altitude; // in meters, AMSL or above terrain
 
   // wish yaw, convert global yaw to local yaw considering the offset on the initial position
   double wishLocalYaw = this->globalYawInitRemap - multi_uav::utils::Math::map(yaw, 0.0, 360.0, -180.0, 180.0);
 
   // final yaw
-  msg.yaw = multi_uav::utils::Math::degreesToRadians(wishLocalYaw);
+  tf::Quaternion q = tf::createQuaternionFromYaw(multi_uav::utils::Math::degreesToRadians(wishLocalYaw));
+  msg.pose.orientation.x = q.getX();
+  msg.pose.orientation.y = q.getY();
+  msg.pose.orientation.z = q.getZ();
+  msg.pose.orientation.w = q.getW();
 
   std::stringstream ssgoing;
   ssgoing << std::fixed;
