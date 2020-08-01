@@ -36,7 +36,6 @@
 #include <multi_uav/utils/Math.h>
 #include <multi_uav/utils/GlobalPosition.h>
 #include <multi_uav/Structures.h>
-#include <multi_uav/RPY.h>
 
 namespace multi_uav{
 
@@ -57,15 +56,6 @@ class Drone {
     ros::ServiceClient serviceClientLand;
     ros::Publisher publisherSetPositionLocal;
     ros::Publisher publisherSetPositionGlobal;
-    ros::Publisher publisherGimbalOrientation;
-
-//    // subscriber is ready
-//    bool stateSubscriberIsOK;
-//    bool globalPositionSubscriberIsOK;
-//    bool localPositionPoseSubscriberIsOK;
-//    bool globalPositionCompassHdgIsOK;
-//    bool cameraRGBSubscriberIsOK;
-//    bool batteryStateSubscriberIsOK;
 
 		//drone
 		bool waitFCUConnection();
@@ -78,15 +68,12 @@ class Drone {
     bool useLocalCoordinates;
     double globalYawInitRemap;
     bool debugMode;
-    std::vector<std::thread*> threads;
 		std::string formatTopicName(std::string topicName);
     void initParameters();
     void initSensors();
-    void initHardwareParameters();
 		void initRosSubscribers();
     void initRosServiceClients();
     void initRosPublishers();
-    void initThreads();
 		void print(std::string txt);
     bool isAngleBetweenLimits(double angle, double angleTarget, double offset, double limitLow, double limtHigh);
 
@@ -101,14 +88,10 @@ class Drone {
     // global sensors data
     DRONE_SENSORS sensors;
 
-    // optional hardware
-    DRONE_HARDWARE hardware;
-
 		//configs
     void setCommandTimeoutSeconds(double timeout);
     void configureToUseLocalCoordinates();
     void configureToUseGlobalCoordinates();
-    void setGimbalOrientation(double pitch);
 
 		// drone		
 		bool setModeStabilized();
@@ -135,9 +118,6 @@ class Drone {
     void mavrosglobalPositionCompassHdgCallback(const std_msgs::Float64::ConstPtr& msg);
     void cameraRGBCallback(const sensor_msgs::Image::ConstPtr& msg);
     void batteryStateCallback(const sensor_msgs::BatteryState::ConstPtr& msg);
-
-    //publisher
-//    void gimbalOrientationPublisher();
 
     //other
     cv::Mat getOSDImage();

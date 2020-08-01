@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="droneId" default="0"/>
+    <arg name="camera" default="rgb"/>
+
+    <node pkg="multi_uav" name="image_viewer_node" type="image_viewer_node" output="screen">
+        <param name="droneId" value="$(arg droneId)" />
+        <param name="camera" value="$(arg camera)" />
+    </node>
+
+</launch>

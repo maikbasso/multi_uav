@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-    <node pkg="multi_uav" name="gimbal_control_node" type="gimbal_control_node" output="screen"/>
-
-</launch>

@@ -32,9 +32,6 @@ Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
   // init sensors
   this->initSensors();
 
-  // init hardware parameters
-  this->initHardwareParameters();
-
   // init subscribers
   this->initRosSubscribers();
 
@@ -43,9 +40,6 @@ Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
 
   // init publishers
   this->initRosPublishers();
-
-  // init threads
-  this->initThreads();
 
   // ros data initialization
   int count = 40;
@@ -62,11 +56,6 @@ Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
 }
 
 Drone::~Drone(){
-
-  //threads
-  for (int i = 0; i < this->threads.size(); ++i) {
-    this->threads[i]->~thread();
-  }
 
   // subscribers
   this->stateSubscriber.shutdown();
@@ -85,16 +74,8 @@ Drone::~Drone(){
   // publishers
   this->publisherSetPositionLocal.shutdown();
   this->publisherSetPositionGlobal.shutdown();
-  this->publisherGimbalOrientation.shutdown();
 
   this->print("success on shutdown drone interface");
-}
-
-void Drone::initThreads(){
-
-  //non-blocking threads
-  //this->threads.push_back(new std::thread(&Drone::gimbalOrientationPublisher, this));
-
 }
 
 void Drone::configureToUseLocalCoordinates(){
@@ -115,39 +96,6 @@ void Drone::setCommandTimeoutSeconds(double timeout){
   ss << this->commandTimeoutSeconds;
   ss << " seconds";
   this->print(ss.str());
-}
-
-void Drone::setGimbalOrientation(double pitch){
-  if(pitch < -90.0 || pitch > 120.0){
-    this->print("gimbal angle [pitch] out of limits [-90.0, 120.0].");
-    //this->hardware.gimbal.pitch = 0.0;
-  }
-  else{
-    this->hardware.gimbal.pitch = pitch;
-  }
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(2) << "gimbal angle [pitch] is set to ";
-  ss << this->hardware.gimbal.pitch;
-  ss << " degrees";
-  this->print(ss.str());
-
-//    ros::Rate rate(100.0);
-
-//    for(int i=0; i<10 && ros::ok(); i++)
-//    {
-      // create the message
-      multi_uav::RPY msg;
-      msg.roll = this->hardware.gimbal.roll;
-      //this implementation needs to be performed on gimbal plugin side
-      //double newPitch = this->hardware.gimbal.pitch - this->parameters.orientation.local.pitch;
-      msg.pitch = this->hardware.gimbal.pitch;
-      msg.yaw = this->hardware.gimbal.yaw;
-      //publish
-      this->publisherGimbalOrientation.publish(msg);
-//      //sleep
-//      rate.sleep();
-//    }
-
 }
 
 void Drone::print(std::string text){
@@ -181,22 +129,6 @@ void Drone::initSensors(){
   this->sensors = sensors;
 
   this->print("sensors OK");
-}
-
-void Drone::initHardwareParameters(){
-  this->print("initializing hardware parameters");
-
-  VEHICLE_GIMBAL gimbal;
-  gimbal.roll = 0.0;
-  gimbal.pitch = 0.0;
-  gimbal.yaw = 0.0;
-
-  DRONE_HARDWARE hardware;
-  hardware.gimbal = gimbal;
-
-  this->hardware = hardware;
-
-  this->print("hardware OK");
 }
 
 void Drone::initParameters(){
@@ -282,24 +214,25 @@ cv::Mat Drone::getOSDImage(){
   cv::Mat temp = this->sensors.camera.rgb.image.clone();
 
   cv::Scalar color = cv::Scalar(255,255,255);
-  int fontSize = 1.8;
+  double fontSize = 1.0;
   int width = temp.size[1];
   int height = temp.size[0];
+
+#if CV_MAJOR_VERSION > 4
+  int lineType = CV_AA;
+#else
+  int lineType = cv::LINE_AA;
+#endif
 
   std::stringstream ssname;
   ssname << "Drone " << this->parameters.id;
   std::string name = ssname.str();
-  cv::putText(temp, name.c_str(), cv::Point(30, 30), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
+  cv::putText(temp, name.c_str(), cv::Point(30, 30), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, lineType);
 
   std::stringstream ssbattery;
   ssbattery << "Battery: " << (int)(this->parameters.battery.percentage * 100.0) << "%";
   std::string battery = ssbattery.str();
-  cv::putText(temp, battery.c_str(), cv::Point(width-200, 30), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
-
-  std::stringstream ssgimbal;
-  ssgimbal << std::fixed << std::setprecision(2) << "Gimbal[pitch]: " << this->hardware.gimbal.pitch;
-  std::string gimbal = ssgimbal.str();
-  cv::putText(temp, gimbal.c_str(), cv::Point(width-260, 60), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
+  cv::putText(temp, battery.c_str(), cv::Point(width-200, 30), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, lineType);
 
   std::stringstream ssmode;
   ssmode << "FCU: " << this->parameters.connected << " ";
@@ -307,7 +240,7 @@ cv::Mat Drone::getOSDImage(){
   ssmode << "Armed: " << this->parameters.armed << " ";
   ssmode << "Guided: " << this->parameters.guided << " ";
   std::string mode = ssmode.str();
-  cv::putText(temp, mode.c_str(), cv::Point(200, height-100), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
+  cv::putText(temp, mode.c_str(), cv::Point(200, height-100), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, lineType);
 
   std::stringstream ssxyz;
   ssxyz << std::fixed;
@@ -318,7 +251,7 @@ cv::Mat Drone::getOSDImage(){
   ssxyz << std::setprecision(2) << "pitch: " << this->parameters.orientation.local.pitch <<  " ";
   ssxyz << std::setprecision(2) << "yaw: " << this->parameters.orientation.local.yaw;
   std::string xyz = ssxyz.str();
-  cv::putText(temp, xyz.c_str(), cv::Point(160, height-60), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
+  cv::putText(temp, xyz.c_str(), cv::Point(160, height-60), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, lineType);
 
   std::stringstream ssgps;
   ssgps << std::fixed;
@@ -327,7 +260,7 @@ cv::Mat Drone::getOSDImage(){
   ssgps << std::setprecision(2) << "alt: " << this->parameters.position.global.altitude << " ";
   ssgps << std::setprecision(2) << "yaw: " << this->parameters.orientation.global.yaw;
   std::string gps = ssgps.str();
-  cv::putText(temp, gps.c_str(), cv::Point(150, height-20), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, CV_AA);
+  cv::putText(temp, gps.c_str(), cv::Point(150, height-20), cv::FONT_HERSHEY_COMPLEX_SMALL, fontSize, color, 1, lineType);
 
   return temp;
 }
@@ -395,8 +328,6 @@ void Drone::cameraRGBCallback(const sensor_msgs::Image::ConstPtr& msg){
   cv_bridge::CvImagePtr cv_ptr;
   cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
   this->sensors.camera.rgb.image = cv_ptr->image;
-
-  //this->cameraRGBSubscriberIsOK = true;
 }
 
 void Drone::batteryStateCallback(const sensor_msgs::BatteryState::ConstPtr& msg){
@@ -407,19 +338,11 @@ void Drone::batteryStateCallback(const sensor_msgs::BatteryState::ConstPtr& msg)
   this->parameters.battery.percentage = current.percentage;
   this->parameters.battery.present = current.present;
 
-  //this->batteryStateSubscriberIsOK = true;
 }
 
 void Drone::initRosSubscribers(){
 
   this->print("initializing ROS subscribers");
-
-//  this->stateSubscriberIsOK = false;
-//  this->globalPositionSubscriberIsOK = false;
-//  this->localPositionPoseSubscriberIsOK = false;
-//  this->globalPositionCompassHdgIsOK = false;
-//  this->cameraRGBSubscriberIsOK = false;
-//  this->batteryStateSubscriberIsOK = false;
 
   // state
   this->stateSubscriber = this->nodeHandle.subscribe<mavros_msgs::State>(this->formatTopicName("/mavros/state"), 1, &Drone::mavrosStateCallback, this);
@@ -430,24 +353,9 @@ void Drone::initRosSubscribers(){
   // global compass heading graus
   this->globalPositionCompassHdg = this->nodeHandle.subscribe<std_msgs::Float64>(this->formatTopicName("/mavros/global_position/compass_hdg"), 1, &Drone::mavrosglobalPositionCompassHdgCallback, this);
   // camera rbg
-  this->cameraRGBSubscriber = this->nodeHandle.subscribe<sensor_msgs::Image>(this->formatTopicName("/camera/image_raw"), 1, &Drone::cameraRGBCallback, this);
+  this->cameraRGBSubscriber = this->nodeHandle.subscribe<sensor_msgs::Image>(this->formatTopicName("/camera/rgb/image_raw"), 1, &Drone::cameraRGBCallback, this);
   //battery state
   this->batteryStateSubscriber = this->nodeHandle.subscribe<sensor_msgs::BatteryState>(this->formatTopicName("/mavros/battery"), 1, &Drone::batteryStateCallback, this);
-
-//  // wait to ok
-//  ros::Rate rate(20.0);
-//  while(ros::ok() && (
-//    !this->stateSubscriberIsOK ||
-//    !this->globalPositionSubscriberIsOK ||
-//    !this->localPositionPoseSubscriberIsOK ||
-//    !this->globalPositionCompassHdgIsOK ||
-//    !this->cameraRGBSubscriberIsOK ||
-//    !this->batteryStateSubscriberIsOK
-//     )
-//  ){
-//    ros::spinOnce();
-//    rate.sleep();
-//  }
 
   this->print("subscribers are OK");
 }
@@ -473,9 +381,6 @@ void Drone::initRosPublishers(){
 
   // set position global publisher
   this->publisherSetPositionGlobal = this->nodeHandle.advertise<mavros_msgs::GlobalPositionTarget>(this->formatTopicName("/mavros/setpoint_position/global"), 100);
-
-  // set gimbal angle publisher
-  this->publisherGimbalOrientation = this->nodeHandle.advertise<multi_uav::RPY>(this->formatTopicName("/gimbal/set_orientation"), 1);
 }
 
 //void Drone::gimbalOrientationPublisher(){

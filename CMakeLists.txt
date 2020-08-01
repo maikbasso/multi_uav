@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   cv_bridge
   gazebo_ros
-  message_generation
+  #message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -56,10 +56,10 @@ find_package(gazebo REQUIRED) # Depend on system install of Gazebo
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- add_message_files(DIRECTORY msg
-   FILES
-   RPY.msg
-)
+#add_message_files(DIRECTORY msg
+#   FILES
+#   RPY.msg
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -151,10 +151,6 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/utils/OpenCVExtra.cpp
 )
 
-add_library(GimbalSmall2dPlugin
-  src/gazebo_plugins/GimbalSmall2dPlugin.cpp
-)
-
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -165,13 +161,12 @@ add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EX
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/multi_uav_node.cpp)
-add_executable(gimbal_control_node src/nodes/examples/gimbal_control_node.cpp)
 add_executable(offboard_local_control_node src/nodes/examples/offboard_local_control_node.cpp)
 add_executable(offboard_global_control_node src/nodes/examples/offboard_global_control_node.cpp)
 add_executable(formation_joystick_node src/nodes/examples/formation_joystick_node.cpp)
 add_executable(formation_auto_node src/nodes/examples/formation_auto_node.cpp)
 add_executable(joystick_node src/nodes/examples/joystick_node.cpp)
-add_executable(osd_viewer_node src/nodes/examples/osd_viewer_node.cpp)
+add_executable(image_viewer_node src/nodes/examples/image_viewer_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -188,14 +183,12 @@ add_executable(osd_viewer_node src/nodes/examples/osd_viewer_node.cpp)
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(gimbal_control_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(offboard_local_control_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(offboard_global_control_node ${PROJECT_NAME}  ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(formation_joystick_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(formation_auto_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
-target_link_libraries(GimbalSmall2dPlugin ${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 target_link_libraries(joystick_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
-target_link_libraries(osd_viewer_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(image_viewer_node ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##

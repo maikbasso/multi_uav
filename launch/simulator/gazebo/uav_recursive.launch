@@ -14,11 +14,16 @@
         <arg name="ID" value="$(eval arg('numberUAVs') - 1)"/>
         <!-- PX4 SITL and vehicle spawn -->
         <include file="$(find multi_uav)/launch/simulator/gazebo/single_vehicle_spawn_sdf.launch">
-            <arg name="ID" value="$(arg ID)"/>
-            <arg name="vehicle" value="$(arg vehicle)"/>
             <arg name="x" value="1"/>
             <arg name="y" value="$(eval 0 + arg('numberUAVs'))"/>
             <arg name="z" value="0.05"/>
+            <arg name="R" value="0"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="0"/>
+            <arg name="ID" value="$(arg ID)"/>
+            <arg name="vehicle" value="$(arg vehicle)"/>
+            <arg name="mavlink_udp_port" value="$(eval 14560 + arg('numberUAVs') - 1)"/>
+            <arg name="mavlink_tcp_port" value="$(eval 4560 + arg('numberUAVs') - 1)"/>
         </include>
         <!-- MAVROS -->
         <include file="$(find mavros)/launch/px4.launch">
@@ -42,11 +47,10 @@
              <arg name="R" value="0"/>
              <arg name="P" value="0"/>
              <arg name="Y" value="0"/>
+             <arg name="ID" value="$(arg ID)"/>
              <arg name="vehicle" value="$(arg vehicle)"/>
              <arg name="mavlink_udp_port" value="$(eval 14560 + arg('numberUAVs') - 1)"/>
              <arg name="mavlink_tcp_port" value="$(eval 4560 + arg('numberUAVs') - 1)"/>
-             <arg name="ID" value="$(arg ID)"/>
-             <arg name="namedrone" value="uav"/>
          </include>
          <!-- MAVROS -->
          <include file="$(find mavros)/launch/px4.launch">

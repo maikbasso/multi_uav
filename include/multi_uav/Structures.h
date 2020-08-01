@@ -76,16 +76,6 @@ typedef struct{
   DRONE_CAMERA camera;
 }DRONE_SENSORS;
 
-typedef struct{
-  double roll;
-  double pitch;
-  double yaw;
-}VEHICLE_GIMBAL;
-
-typedef struct{
-  VEHICLE_GIMBAL gimbal;
-}DRONE_HARDWARE;
-
 }
 
 #endif // STRUCTURES_H
