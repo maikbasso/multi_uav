@@ -2,12 +2,12 @@
 <launch>
     <!-- Simulation configs -->
     <arg name="numberUAVs" default="3"/>
-    <arg name="vehicle" default="iris"/>
-    <arg name="modelType" default="xacro"/>
+    <arg name="vehicle" default="iris_fpv_camera"/>
+    <arg name="modelType" default="sdf"/>
     <arg name="worldName" default="empty"/>
     <!-- gazebo configs -->
     <arg name="gui" default="true"/>
-    <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/empty.world"/><!-- $(find multi_uav)/worlds/$(arg worldName).world -->
+    <arg name="world" default="$(find multi_uav)/worlds/$(arg worldName).world"/><!-- $(find mavlink_sitl_gazebo)/worlds/empty.world -->
     <arg name="debug" default="false"/>
     <arg name="verbose" default="false"/>
     <arg name="paused" default="false"/>

@@ -32,7 +32,7 @@
 // cv bridge
 #include <cv_bridge/cv_bridge.h>
 
-// own
+// multi_uav
 #include <multi_uav/utils/Math.h>
 #include <multi_uav/utils/GlobalPosition.h>
 #include <multi_uav/Structures.h>
