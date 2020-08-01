@@ -149,6 +149,7 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/utils/Math.cpp
   src/${PROJECT_NAME}/utils/GlobalPosition.cpp
   src/${PROJECT_NAME}/utils/OpenCVExtra.cpp
+  src/${PROJECT_NAME}/utils/SafePrint.cpp
 )
 
 ## Add cmake target dependencies of the library

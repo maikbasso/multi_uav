@@ -36,6 +36,7 @@
 #include <multi_uav/utils/Math.h>
 #include <multi_uav/utils/GlobalPosition.h>
 #include <multi_uav/Structures.h>
+#include <multi_uav/utils/SafePrint.h>
 
 namespace multi_uav{
 

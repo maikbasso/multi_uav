@@ -100,7 +100,7 @@ void Drone::setCommandTimeoutSeconds(double timeout){
 
 void Drone::print(std::string text){
   if(this->debugMode){
-    std::cout << "DRONE " << this->droneNumber << ": " << text << "." << std::endl;
+    multi_uav::utils::SafePrint{} << "DRONE " << this->droneNumber << ": " << text << "." << std::endl;
   }
 }
 
@@ -114,7 +114,7 @@ std::string Drone::formatTopicName(std::string topicName){
 }
 
 void Drone::initSensors(){
-  this->print("initializing sensors data");
+  //this->print("initializing sensors data");
 
   DRONE_CAMERA_RGB rgbCamera;
   rgbCamera.name = "Camera RGB";
@@ -128,11 +128,11 @@ void Drone::initSensors(){
 
   this->sensors = sensors;
 
-  this->print("sensors OK");
+  //this->print("sensors OK");
 }
 
 void Drone::initParameters(){
-  this->print("initializing parameters");
+  //this->print("initializing parameters");
 
   VEHICLE_POSITION_LOCAL posLocal;
   posLocal.x = 0.0;
@@ -176,7 +176,7 @@ void Drone::initParameters(){
 
   this->parameters = parameters;
 
-  this->print("parameters OK");
+  //this->print("parameters OK");
 }
 
 void Drone::printParameters(){
@@ -207,7 +207,7 @@ void Drone::printParameters(){
   ss << "orientation.relative.yaw: " << this->parameters.orientation.local.yaw << std::endl;
   ss << "==========================================" << std::endl;
   ss << std::endl;
-  std::cout << ss.str();
+  multi_uav::utils::SafePrint{} << ss.str();
 }
 
 cv::Mat Drone::getOSDImage(){
@@ -271,8 +271,6 @@ void Drone::mavrosStateCallback(const mavros_msgs::State::ConstPtr& msg){
   this->parameters.mode = current.mode;
   this->parameters.armed = current.armed;
   this->parameters.guided = current.guided;
-
-  //this->stateSubscriberIsOK = true;
 }
 
 void Drone::mavrosGlobalPositionCallback(const sensor_msgs::NavSatFix::ConstPtr& msg){
@@ -280,8 +278,6 @@ void Drone::mavrosGlobalPositionCallback(const sensor_msgs::NavSatFix::ConstPtr&
   this->parameters.position.global.latitude = current.latitude;
   this->parameters.position.global.longitude = current.longitude;
   this->parameters.position.global.altitude = current.altitude;
-
-  //this->globalPositionSubscriberIsOK = true;
 }
 
 void Drone::mavrosLocalPositionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg){
@@ -291,14 +287,6 @@ void Drone::mavrosLocalPositionCallback(const geometry_msgs::PoseStamped::ConstP
   this->parameters.position.local.x = current.pose.position.x;
   this->parameters.position.local.y = current.pose.position.y;
   this->parameters.position.local.z = current.pose.position.z;
-
-  // orientation
-  //tf::Pose pose;
-  //tf::poseMsgToTF(current.pose, pose);
-
-  //double roll = multi_uav::utils::Math::radiansToDegrees(tf::getYaw(pose.getRotation()));
-  //double pitch = multi_uav::utils::Math::radiansToDegrees(tf::getYaw(pose.getRotation()));
-  //double yaw = multi_uav::utils::Math::radiansToDegrees(tf::getYaw(pose.getRotation()));
 
   tf::Quaternion q(current.pose.orientation.x, current.pose.orientation.y, current.pose.orientation.z, current.pose.orientation.w);
   tf::Matrix3x3 m(q);
@@ -310,7 +298,6 @@ void Drone::mavrosLocalPositionCallback(const geometry_msgs::PoseStamped::ConstP
   this->parameters.orientation.local.pitch = multi_uav::utils::Math::radiansToDegrees(pitch);
   this->parameters.orientation.local.yaw = multi_uav::utils::Math::radiansToDegrees(yaw);
 
-  //this->localPositionPoseSubscriberIsOK = true;
 }
 
 
@@ -320,8 +307,6 @@ void Drone::mavrosglobalPositionCompassHdgCallback(const std_msgs::Float64::Cons
   // global yaw
   double yaw = (double) current.data;
   this->parameters.orientation.global.yaw = yaw; // fix compass orientation on model
-
-  //this->globalPositionCompassHdgIsOK = true;
 }
 
 void Drone::cameraRGBCallback(const sensor_msgs::Image::ConstPtr& msg){
@@ -382,26 +367,6 @@ void Drone::initRosPublishers(){
   // set position global publisher
   this->publisherSetPositionGlobal = this->nodeHandle.advertise<geographic_msgs::GeoPoseStamped>(this->formatTopicName("/mavros/setpoint_position/global"), 100);
 }
-
-//void Drone::gimbalOrientationPublisher(){
-
-//  ros::Rate rate(1.0);
-
-//  while (ros::ok()) {
-//    // create the message
-//    multi_uav::RPY msg;
-//    msg.roll = this->hardware.gimbal.roll;
-//    //this implementation needs to be performed on gimbal plugin side
-//    //double newPitch = this->hardware.gimbal.pitch - this->parameters.orientation.local.pitch;
-//    msg.pitch = this->hardware.gimbal.pitch;
-//    msg.yaw = this->hardware.gimbal.yaw;
-//    //publish
-//    this->publisherGimbalOrientation.publish(msg);
-//    //sleep
-//    rate.sleep();
-//  }
-
-//}
 
 bool Drone::waitFCUConnection(){
   this->print("wait FCU connection");
