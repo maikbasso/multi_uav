@@ -2,7 +2,7 @@
 <launch>
     <!-- Simulation configs -->
     <arg name="numberUAVs" default="3"/>
-    <arg name="vehicle" default="iris_fpv_camera"/>
+    <arg name="vehicle" default="iris"/>
     <arg name="modelType" default="sdf"/>
     <arg name="worldName" default="empty"/>
     <!-- gazebo configs -->
