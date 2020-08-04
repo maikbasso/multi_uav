@@ -1,4 +1,5 @@
-<sdf version='1.5'>
+<?xml version='1.0'?>
+<sdf version='1.7'>
   <model name='solo'>
     <!-- Solo body -->
     <link name='base_link'>
