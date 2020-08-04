@@ -21,7 +21,7 @@ Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
   this->globalYawInitRemap = 0.0;
 
   // default values of parameters
-  this->setCommandTimeoutSeconds(45.0);
+  this->setCommandTimeoutSeconds(1.0);
 
   // by default use local coordinates
   this->configureToUseLocalCoordinates();
