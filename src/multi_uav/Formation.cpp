@@ -72,13 +72,26 @@ void Formation::setWaitEnable(bool enable)
 
 
 void Formation::droneLocalControl(int droneNumber ){
-  this->drones[droneNumber]->configureToUseLocalCoordinates();
-  this->drones[droneNumber]->forceModeOffboard();
-  this->drones[droneNumber]->arm();
-  while(ros::ok()){
-    this->drones[droneNumber]->goToLocalPosition(this->posDrones[droneNumber].x, this->posDrones[droneNumber].y, this->posDrones[droneNumber].z, this->posDrones[droneNumber].theta, this->waitEnable);
+
+  int droneFound = -1;
+
+  // get drone
+  for (int i=0; i<this->drones.size(); i++) {
+    if(this->drones[i]->parameters.id == droneNumber){
+      droneFound = i;
+      break;
+    }
   }
-  this->drones[droneNumber]->~Drone();
+
+  if(droneFound != -1){
+    this->drones[droneFound]->configureToUseLocalCoordinates();
+    this->drones[droneFound]->forceModeOffboard();
+    this->drones[droneFound]->arm();
+    while(ros::ok()){
+      this->drones[droneFound]->goToLocalPosition(this->posDrones[droneFound].x, this->posDrones[droneFound].y, this->posDrones[droneFound].z, this->posDrones[droneFound].theta, this->waitEnable);
+    }
+    this->drones[droneFound]->~Drone();
+  }
 }
 
 int Formation::getch()
