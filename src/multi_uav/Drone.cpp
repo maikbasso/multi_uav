@@ -362,10 +362,10 @@ void Drone::initRosServiceClients(){
 
 void Drone::initRosPublishers(){
   // set position local publisher
-  this->publisherSetPositionLocal = this->nodeHandle.advertise<geometry_msgs::PoseStamped>(this->formatTopicName("/mavros/setpoint_position/local"), 100);
+  this->publisherSetPositionLocal = this->nodeHandle.advertise<geometry_msgs::PoseStamped>(this->formatTopicName("/mavros/setpoint_position/local"), 10);
 
   // set position global publisher
-  this->publisherSetPositionGlobal = this->nodeHandle.advertise<geographic_msgs::GeoPoseStamped>(this->formatTopicName("/mavros/setpoint_position/global"), 100);
+  this->publisherSetPositionGlobal = this->nodeHandle.advertise<geographic_msgs::GeoPoseStamped>(this->formatTopicName("/mavros/setpoint_position/global_to_local"), 10);
 }
 
 bool Drone::waitFCUConnection(){
@@ -786,10 +786,9 @@ bool Drone::goToGlobalPosition(double latitude, double longitude, double altitud
   ssgoing << "vehicle going to ";
   ssgoing << std::setprecision(8) << "latitude: " << latitude << ", ";
   ssgoing << std::setprecision(8) << "longitude: " << longitude <<  ", ";
-  ssgoing << std::setprecision(2) << "altitude: " << (altitude - this->parameters.position.global.altitude) <<  ", ";
+  ssgoing << std::setprecision(2) << "altitude: " << altitude <<  ", ";
   ssgoing << std::setprecision(2) << "yaw: " << yaw;
   std::string goingTo = ssgoing.str();
-
   this->print(goingTo);
 
   if(wait){
@@ -815,7 +814,7 @@ bool Drone::goToGlobalPosition(double latitude, double longitude, double altitud
 //      ssgps << std::setprecision(12) << "lat: " << negativeOffset->getLatitude() << " < " << this->parameters.position.global.latitude << " > " << positiveOffset->getLatitude() << std::endl;
 //      ssgps << std::setprecision(12) << "long: " << negativeOffset->getLongitude() << " < " << this->parameters.position.global.longitude << " > " << positiveOffset->getLongitude() << std::endl;
 //      ssgps << std::setprecision(6) << "alt: "  << negativeOffset->getAltitude() << " < " << this->parameters.position.global.altitude << " > " << positiveOffset->getAltitude() << std::endl;
-//      ssgps << std::setprecision(6) << "yaw: "  << tlow << " < " << this->parameters.orientation.global.yaw << " > " << thigh << std::endl;
+//      //ssgps << std::setprecision(6) << "yaw: "  << tlow << " < " << this->parameters.orientation.global.yaw << " > " << thigh << std::endl;
 //      ssgps << std::endl;
 //      this->print(ssgps.str());
 

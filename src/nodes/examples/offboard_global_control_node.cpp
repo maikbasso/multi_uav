@@ -20,9 +20,12 @@ void droneGlobalControl( ros::NodeHandle nh, int droneNumber ){
   multi_uav::utils::GlobalPosition *gp = new multi_uav::utils::GlobalPosition(
     d->parameters.position.global.latitude,
     d->parameters.position.global.longitude,
-    d->parameters.position.global.altitude + 5.0,
+    d->parameters.position.global.altitude,
     d->parameters.orientation.global.yaw
   );
+
+  // adding the takeoff point
+  gp->addMetersToAltitude(5.0);
 
   while(ros::ok()){
 
@@ -51,10 +54,6 @@ void droneGlobalControl( ros::NodeHandle nh, int droneNumber ){
     d->goToGlobalPosition(gp->getLatitude(), gp->getLongitude(), gp->getAltitude(), gp->getYaw(), true);
   }
 
-  //d->land();
-
-  //d->disarm();
-
   d->~Drone();
 }
 
@@ -65,6 +64,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
 
   std::thread *drone0Thread = new std::thread(droneGlobalControl, nh, 0);
+  std::thread *drone1Thread = new std::thread(droneGlobalControl, nh, 1);
+  std::thread *drone2Thread = new std::thread(droneGlobalControl, nh, 2);
 
   ros::Rate rate(20.0);
   while(ros::ok()){

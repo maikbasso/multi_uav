@@ -13,7 +13,6 @@ void droneLocalControl( ros::NodeHandle nh, int droneNumber ){
 
   d->configureToUseLocalCoordinates();
 
-
   d->forceModeOffboard();
 
   d->arm();
@@ -52,6 +51,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
 
   std::thread *drone0Thread = new std::thread(droneLocalControl, nh, 0);
+  std::thread *drone1Thread = new std::thread(droneLocalControl, nh, 1);
+  std::thread *drone2Thread = new std::thread(droneLocalControl, nh, 2);
 
   ros::Rate rate(20.0);
   while(ros::ok()){
