@@ -69,7 +69,7 @@
             <robotNamespace></robotNamespace>
             <alwaysOn>true</alwaysOn>
             <imageTopicName>rgb/image_raw</imageTopicName>
-            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
             <updateRate>30.0</updateRate>
             <cameraName>camera</cameraName>
             <frameName>/robot_camera_link</frameName>
