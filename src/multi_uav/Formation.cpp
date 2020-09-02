@@ -87,8 +87,10 @@ void Formation::droneLocalControl(int droneNumber ){
     this->drones[droneFound]->configureToUseLocalCoordinates();
     this->drones[droneFound]->forceModeOffboard();
     this->drones[droneFound]->arm();
+    ros::Rate rate(10);
     while(ros::ok()){
       this->drones[droneFound]->goToLocalPosition(this->posDrones[droneFound].x, this->posDrones[droneFound].y, this->posDrones[droneFound].z, this->posDrones[droneFound].theta, this->waitEnable);
+      rate.sleep();
     }
     this->drones[droneFound]->~Drone();
   }
