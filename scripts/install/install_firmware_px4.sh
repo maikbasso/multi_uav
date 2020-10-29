@@ -6,6 +6,7 @@ sudo apt install gstreamer1.0-plugins-good -y
 sudo apt install gstreamer1.0-plugins-bad -y
 sudo apt install gstreamer1.0-plugins-ugly -y
 sudo apt install xmlstarlet -y
+sudo apt install git -y
 
 # setup dir
 mkdir -p /home/$USER/drone_simulator_ws/multi_uav_dependencies/firmware
