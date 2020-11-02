@@ -76,10 +76,10 @@ find_package(gazebo REQUIRED) # Depend on system install of Gazebo
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-    DEPENDENCIES
-        std_msgs
-)
+#generate_messages(
+#    DEPENDENCIES
+#        std_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
