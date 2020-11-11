@@ -24,7 +24,7 @@ mkdir -p ~/drone_simulator_ws/src
 Run on terminal:
 ```sh
 cd ~/drone_simulator_ws/src
-git clone https://github.com/maikbasso/multi-uav.git multi_uav
+git clone https://github.com/maikbasso/multi_uav.git multi_uav
 sh ~/drone_simulator_ws/src/multi_uav/scripts/install/install.sh
 ```
 In the installation, the script can request your Linux user password and other user inputs.
