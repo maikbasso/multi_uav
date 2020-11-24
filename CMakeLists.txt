@@ -143,7 +143,7 @@ include_directories(
 #   src/${PROJECT_NAME}/multi_uav.cpp
 # )
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} STATIC
   src/${PROJECT_NAME}/Drone.cpp
   src/${PROJECT_NAME}/Formation.cpp
   src/${PROJECT_NAME}/utils/Math.cpp
