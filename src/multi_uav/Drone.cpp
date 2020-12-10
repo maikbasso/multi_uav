@@ -6,7 +6,7 @@
 
 namespace multi_uav{
 
-Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
+Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode, bool waitFCUConnection){
 
   // node handle
   this->nodeHandle = nodeHandle;
@@ -51,7 +51,7 @@ Drone::Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode){
   }
 
   //FCU Connection
-  this->waitFCUConnection();
+  if(waitFCUConnection == true) this->waitFCUConnection();
 
 }
 

@@ -79,7 +79,7 @@ class Drone {
     bool isAngleBetweenLimits(double angle, double angleTarget, double offset, double limitLow, double limtHigh);
 
 	public:
-    Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode);
+    Drone(ros::NodeHandle nodeHandle, int droneNumber, bool debugMode = false, bool waitFCUConnection = true);
 		~Drone();
 
     // global parameters
