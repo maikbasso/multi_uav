@@ -100,3 +100,13 @@ Then, compile the project:
 cd catkin_ws
 catkin_make
 ```
+### If the PX4 build fails On Ubuntu
+First remove the following packages:
+```sh
+sudo apt remove libgstreamer1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly -y
+```
+
+Then, install the packages again:
+```sh
+sudo apt install libgstreamer1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly -y
+```
